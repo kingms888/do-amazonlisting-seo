@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Amazon 卖家 Listing SEO 评分器 | 优化产品排名</title>
+    <meta name="description" content="免费 Amazon Listing SEO 评分工具，评估标题、五点描述、后台关键词等 SEO 因素，帮助跨境卖家提升产品排名。">
+    <meta name="keywords" content="Amazon SEO, Listing优化, 关键词研究, 产品排名, 电商SEO评分, 跨境卖家">
+    <meta name="author" content="Amazon卖家工具">
+    <meta name="robots" content="index, follow">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0.8rem 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03);
+            padding: 1.8rem 1.5rem 2.5rem;
+            transition: all 0.2s;
+        }
+
+        /* 语义化标题区域 */
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e9edf2;
+            padding-bottom: 1.2rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #0f1a2e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        h1 small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #5b6f84;
+            background: #eef2f7;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            margin-left: 0.5rem;
+        }
+
+        .subhead {
+            color: #2c3e50;
+            margin-top: 0.3rem;
+            font-size: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-group span {
+            background: #e6edf6;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1f3a5f;
+            margin-right: 0.4rem;
+        }
+
+        /* 核心工具卡片 */
+        .tool-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .input-section {
+            background: #f8fafd;
+            border-radius: 24px;
+            padding: 1.5rem 1.2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1f2a3f;
+            margin-bottom: 0.4rem;
+        }
+
+        .input-group label .hint {
+            font-weight: 400;
+            color: #5f738b;
+            font-size: 0.8rem;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #d4dce8;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            background: white;
+            transition: 0.2s;
+            resize: vertical;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            border-color: #2b6c9e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(43, 108, 158, 0.15);
+        }
+
+        textarea {
+            min-height: 80px;
+        }
+
+        .row-2col {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .row-2col > div {
+            flex: 1 1 200px;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.2rem 0 0.8rem;
+        }
+
+        .btn-primary {
+            background: #1f3a5f;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.8rem 2.2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 4px 8px rgba(31, 58, 95, 0.12);
+            border: 1px solid #1f3a5f;
+        }
+
+        .btn-primary:hover {
+            background: #0f2640;
+            transform: scale(1.01);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #bcc9db;
+            color: #1f2a3f;
+            padding: 0.7rem 1.6rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .btn-secondary:hover {
+            background: #eef3f9;
+        }
+
+        /* 评分结果面板 */
+        .result-panel {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem 1.2rem;
+            border: 1px solid #e2e9f2;
+            margin-top: 0.5rem;
+        }
+
+        .score-overview {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem 2rem;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            background: conic-gradient(#1f3a5f 0deg, #e2e9f2 0deg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #0f1a2e;
+            background: #eef3f9;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .score-circle span {
+            background: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 40px;
+            font-size: 1.8rem;
+        }
+
+        .score-details {
+            flex: 1;
+        }
+
+        .score-details p {
+            margin-bottom: 0.25rem;
+            color: #2c3e50;
+        }
+
+        .score-bar {
+            height: 8px;
+            background: #e2e9f2;
+            border-radius: 20px;
+            width: 100%;
+            margin: 0.5rem 0 0.2rem;
+        }
+
+        .score-bar-fill {
+            height: 8px;
+            background: #1f3a5f;
+            border-radius: 20px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .breakdown {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border-bottom: 1px dashed #dce3ed;
+            padding-bottom: 0.4rem;
+        }
+
+        .breakdown-item .label {
+            font-weight: 500;
+            color: #1f2a3f;
+        }
+
+        .breakdown-item .value {
+            font-weight: 600;
+            color: #1f3a5f;
+        }
+
+        .seo-tips {
+            background: #f2f7fe;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            margin-top: 1.2rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2b6c9e;
+        }
+
+        .seo-tips strong {
+            color: #0f2640;
+        }
+
+        /* 广告占位 & 资源区 */
+        .ad-placeholder {
+            background: #f4f7fc;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            margin: 2rem 0 1.2rem;
+            text-align: center;
+            border: 1px dashed #b9c9de;
+            color: #3a5775;
+            font-size: 0.9rem;
+        }
+
+        .ad-placeholder span {
+            background: #e1e9f3;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        .affiliate-resources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            background: #fafcff;
+            border-radius: 24px;
+            padding: 1.2rem 1rem;
+            margin: 1.5rem 0 0.8rem;
+            border: 1px solid #e2eaf4;
+        }
+
+        .affiliate-item {
+            background: white;
+            padding: 0.4rem 1.2rem 0.4rem 1rem;
+            border-radius: 60px;
+            border: 1px solid #dce5f0;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .affiliate-item a {
+            text-decoration: none;
+            color: #1f3a5f;
+            font-weight: 500;
+        }
+
+        .affiliate-item a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-note {
+            font-size: 0.75rem;
+            color: #5f738b;
+            background: #f0f4fa;
+            padding: 0.6rem 1rem;
+            border-radius: 60px;
+            margin-top: 1.8rem;
+            text-align: center;
+            border: 1px solid #e2eaf2;
+        }
+
+        .footer-note {
+            margin-top: 1rem;
+            text-align: center;
+            color: #6a7f99;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 0.8rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .score-overview {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-primary, .btn-secondary {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>
+            📊 Amazon Listing SEO 评分器
+            <small>卖家工具</small>
+        </h1>
+        <div class="subhead">
+            <span>评估标题 · 五点描述 · 后台关键词</span>
+            <span class="badge-group">
+                <span>#Amazon SEO</span>
+                <span>#Listing优化</span>
+                <span>#关键词研究</span>
+            </span>
+        </div>
+    </header>
+
+    <main class="tool-grid">
+        <!-- 核心输入区 -->
+        <section class="input-section" aria-label="Listing 输入区">
+            <div class="input-group">
+                <label for="titleInput">产品标题 <span class="hint">(建议 ≤ 200 字符，含核心关键词)</span></label>
+                <input type="text" id="titleInput" placeholder="例如: Organic Cotton Baby Towel – Soft Absorbent Baby Bath Wrap, 0-24 Months" value="Organic Cotton Baby Towel – Soft Absorbent Baby Bath Wrap">
+            </div>
+
+            <div class="row-2col">
+                <div class="input-group">
+                    <label for="bulletsInput">五点描述 <span class="hint">(每行一条)</span></label>
+                    <textarea id="bulletsInput" rows="4" placeholder="每条描述包含关键词和卖点…">超柔软有机棉，呵护宝宝肌肤
+快速吸水，浴后速干
+可调节包覆设计，适合0-24个月
+无化学添加，通过OEKO-TEX认证
+机洗耐用，送礼首选</textarea>
+                </div>
+                <div class="input-group">
+                    <label for="keywordsInput">后台关键词 <span class="hint">(逗号或空格分隔)</span></label>
+                    <textarea id="keywordsInput" rows="4" placeholder="baby towel, organic cotton, bath wrap, newborn gift, absorbent">baby towel, organic cotton, bath wrap, newborn gift, absorbent, soft</textarea>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-primary" id="scoreBtn">🔍 评分我的 Listing</button>
+                <button class="btn-secondary" id="resetBtn">清空示例</button>
+            </div>
+        </section>
+
+        <!-- 评分结果 -->
+        <section class="result-panel" id="resultPanel" aria-label="SEO 评分结果">
+            <div class="score-overview">
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scoreDisplay">0</span>
+                </div>
+                <div class="score-details">
+                    <p style="font-weight:600; font-size:1.2rem;">SEO 优化评分</p>
+                    <p style="color:#3a5775;" id="scoreLabel">请填写内容并评分</p>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="scoreBarFill" style="width:0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="breakdown" id="breakdownContainer">
+                <div class="breakdown-item"><span class="label">📌 标题关键词密度</span><span class="value" id="titleScore">0</span></div>
+                <div class="breakdown-item"><span class="label">📝 五点描述覆盖</span><span class="value" id="bulletScore">0</span></div>
+                <div class="breakdown-item"><span class="label">🏷️ 后台关键词丰富度</span><span class="value" id="keywordScore">0</span></div>
+                <div class="breakdown-item"><span class="label">📏 字符/结构合规</span><span class="value" id="structureScore">0</span></div>
+            </div>
+
+            <div class="seo-tips" id="seoTips">
+                <strong>💡 优化建议</strong> <span id="tipText">输入 Listing 信息后点击评分。</span>
+            </div>
+        </section>
+
+        <!-- 广告占位 -->
+        <div class="ad-placeholder" aria-label="广告占位">
+            <span>📢 赞助位</span> — 亚马逊卖家工具推荐 · <strong>SellerSprite / 卖家精灵</strong> (广告占位)
+        </div>
+
+        <!-- 联盟/资源推荐 -->
+        <div class="affiliate-resources">
+            <span style="font-weight:500; color:#1f2a3f;">🔗 推荐资源</span>
+            <span class="affiliate-item"><a href="#" target="_blank" rel="nofollow sponsored">📊 关键词研究工具</a></span>
+            <span class="affiliate-item"><a href="#" target="_blank" rel="nofollow sponsored">📈 排名追踪器</a></span>
+            <span class="affiliate-item"><a href="#" target="_blank" rel="nofollow sponsored">📦 选品分析</a></span>
+            <span style="color:#6a7f99; font-size:0.8rem;">(部分为联盟链接)</span>
+        </div>
+
+        <!-- 隐私说明 -->
+        <div class="privacy-note">
+            🔒 事件可能被匿名计数以改进产品。使用即表示同意。 <span style="opacity:0.7;">(reportEvent 仅当端点配置时发送)</span>
+        </div>
+        <div class="footer-note">
+            Amazon 卖家 · 提升 Listing SEO
+        </div>
+    </main>
+</div>
+
+<script>
+    (function() {
+        // ----- DOM refs -----
+        const titleInput = document.getElementById('titleInput');
+        const bulletsInput = document.getElementById('bulletsInput');
+        const keywordsInput = document.getElementById('keywordsInput');
+        const scoreBtn = document.getElementById('scoreBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const scoreCircle = document.getElementById('scoreCircle');
+        const scoreBarFill = document.getElementById('scoreBarFill');
+        const scoreLabel = document.getElementById('scoreLabel');
+        const titleScoreEl = document.getElementById('titleScore');
+        const bulletScoreEl = document.getElementById('bulletScore');
+        const keywordScoreEl = document.getElementById('keywordScore');
+        const structureScoreEl = document.getElementById('structureScore');
+        const tipText = document.getElementById('tipText');
+
+        // ----- 评分核心逻辑 -----
+        function runSEOScore() {
+            const title = titleInput.value.trim();
+            const bulletsRaw = bulletsInput.value.trim();
+            const keywordsRaw = keywordsInput.value.trim();
+
+            // 预处理
+            const bullets = bulletsRaw ? bulletsRaw.split(/\n/).filter(b => b.trim().length > 0) : [];
+            const keywordList = keywordsRaw ? keywordsRaw.split(/[,，\s]+/).filter(k => k.trim().length > 0) : [];
+
+            // 1. 标题关键词密度 (0-25) 基于常见词检测
+            let titleScore = 0;
+            const titleLower = title.toLowerCase();
+            // 简单检测是否包含产品核心词 (常见电商词)
+            const commonWords = ['baby', 'towel', 'organic', 'cotton', 'wrap', 'absorbent', 'soft', 'bath', 'newborn', 'gift', 'water', 'dry', 'adjustable'];
+            let matchCount = 0;
+            for (let w of commonWords) {
+                if (titleLower.includes(w)) matchCount++;
+            }
+            // 同时检查长度 80-200 加分
+            let titleLen = title.length;
+            let lengthScore = 0;
+            if (titleLen >= 60 && titleLen <= 200) lengthScore = 8;
+            else if (titleLen > 200) lengthScore = 3;
+            else if (titleLen > 0) lengthScore = 4;
+
+            let densityScore = Math.min(17, matchCount * 3); // 最多17
+            titleScore = Math.min(25, densityScore + lengthScore);
+
+            // 2. 五点描述覆盖 (0-25) 每个要点含关键词加分，最多5条
+            let bulletScore = 0;
+            if (bullets.length > 0) {
+                let coveredBullets = 0;
+                for (let b of bullets) {
+                    const bLower = b.toLowerCase();
+                    let hasKeyword = commonWords.some(w => bLower.includes(w));
+                    if (hasKeyword) coveredBullets++;
+                }
+                bulletScore = Math.min(25, coveredBullets * 5 + (bullets.length >= 4 ? 3 : 0) + (bullets.length >= 5 ? 2 : 0));
+            } else {
+                bulletScore = 0;
+            }
+
+            // 3. 后台关键词丰富度 (0-25)
+            let keywordScore = 0;
+            if (keywordList.length > 0) {
+                let unique = new Set(keywordList.map(k => k.toLowerCase().trim()));
+                let size = unique.size;
+                if (size >= 8) keywordScore = 25;
+                else if (size >= 5) keywordScore = 20;
+                else if (size >= 3) keywordScore = 14;
+                else keywordScore = 8;
+                // 额外奖励 包含长尾
+                let hasLongTail = Array.from(unique).some(k => k.split(' ').length >= 3);
+                if (hasLongTail) keywordScore = Math.min(25, keywordScore + 4);
+            } else {
+                keywordScore = 0;
+            }
+
+            // 4. 结构合规 (0-25) 标题存在，五点存在，关键词存在，字符合理
+            let structureScore = 0;
+            if (title.length > 0) structureScore += 6;
+            if (bullets.length >= 3) structureScore += 7;
+            else if (bullets.length > 0) structureScore += 3;
+            if (keywordList.length >= 3) structureScore += 7;
+            else if (keywordList.length > 0) structureScore += 3;
+            // 额外：标题无过多大写/符号
+            let upperRatio = title.split('').filter(c => c >= 'A' && c <= 'Z').length / (title.length || 1);
+            if (upperRatio < 0.4) structureScore += 5;
+            else structureScore += 2;
+            structureScore = Math.min(25, structureScore);
+
+            // 总分
+            let total = Math.round(titleScore + bulletScore + keywordScore + structureScore);
+            total = Math.min(100, Math.max(0, total));
+
+            // 更新UI
+            scoreDisplay.textContent = total;
+            scoreBarFill.style.width = total + '%';
+            // 圆环颜色 (简单)
+            scoreCircle.style.background = total > 70 ? '#d3e6d3' : (total > 40 ? '#f5e6c6' : '#f5d6d6');
+            // 标签
+            if (total >= 80) scoreLabel.textContent = '🌟 优秀！Listing SEO 很完善';
+            else if (total >= 60) scoreLabel.textContent = '✅ 良好，仍有提升空间';
+            else if (total >= 40) scoreLabel.textContent = '⚠️ 一般，建议优化关键词和结构';
+            else scoreLabel.textContent = '❌ 需要大幅改进，参考建议';
+
+            // 单项显示
+            titleScoreEl.textContent = titleScore + '/25';
+            bulletScoreEl.textContent = bulletScore + '/25';
+            keywordScoreEl.textContent = keywordScore + '/25';
+            structureScoreEl.textContent = structureScore + '/25';
+
+            // 优化建议
+            let tips = [];
+            if (title.length < 30) tips.push('标题太短，加入核心关键词');
+            else if (title.length > 200) tips.push('标题超过200字符，精简');
+            if (bullets.length < 3) tips.push('至少写3条五点描述，包含关键词');
+            if (keywordList.length < 5) tips.push('后台关键词至少5个，利用长尾词');
+            if (titleScore < 15) tips.push('标题中增加产品核心词 (例如 organic, baby, towel)');
+            if (bulletScore < 15) tips.push('五点描述中重复关键词，突出卖点');
+            if (tips.length === 0) tips.push('看起来不错！持续监控排名变化。');
+            tipText.textContent = tips.join('； ');
+
+            // 发送事件 (匿名)
+            reportEvent('listing_scored', {
+                totalScore: total,
+                titleScore: titleScore,
+                bulletScore: bulletScore,
+                keywordScore: keywordScore,
+                structureScore: structureScore
+            });
+        }
+
+        // ----- 重置示例 (清空但保留占位) -----
+        function resetToPlaceholder() {
+            titleInput.value = '';
+            bulletsInput.value = '';
+            keywordsInput.value = '';
+            // 重置评分显示
+            scoreDisplay.textContent = '0';
+            scoreBarFill.style.width = '0%';
+            scoreCircle.style.background = '#eef3f9';
+            scoreLabel.textContent = '请填写内容并评分';
+            titleScoreEl.textContent = '0';
+            bulletScoreEl.textContent = '0';
+            keywordScoreEl.textContent = '0';
+            structureScoreEl.textContent = '0';
+            tipText.textContent = '输入 Listing 信息后点击评分。';
+            // 事件：重置
+            reportEvent('reset_fields', {});
+        }
+
+        // ----- reportEvent 函数 (全局) -----
+        window.reportEvent = function(name, payload) {
+            if (typeof window.ORGANISM_METRICS_ENDPOINT === 'string' && window.ORGANISM_METRICS_ENDPOINT.length > 0) {
+                try {
+                    const body = JSON.stringify({ event: name, payload: payload, timestamp: Date.now() });
+                    fetch(window.ORGANISM_METRICS_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: body,
+                        keepalive: true
+                    }).catch(() => {});
+                } catch (e) {
+                    // 静默失败
+                }
+            }
+        };
+
+        // 绑定事件
+        scoreBtn.addEventListener('click', runSEOScore);
+        resetBtn.addEventListener('click', resetToPlaceholder);
+
+        // 初始加载时自动评分（如果有默认值）
+        window.addEventListener('DOMContentLoaded', function() {
+            // 如果输入框非空，自动评分
+            if (titleInput.value.trim() !== '' || bulletsInput.value.trim() !== '' || keywordsInput.value.trim() !== '') {
+                runSEOScore();
+            }
+            // 报告页面浏览 (匿名)
+            reportEvent('page_view', { page: 'amazon_listing_seo_scorer' });
+        });
+
+        // 额外：输入框支持 Ctrl+Enter 评分
+        document.querySelectorAll('textarea, input').forEach(el => {
+            el.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    runSEOScore();
+                }
+            });
+        });
+
+    })();
+</script>
+
+</body>
+</html>
